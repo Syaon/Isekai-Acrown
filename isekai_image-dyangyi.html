@@ -4,20 +4,23 @@
   max-width: 800px;
   margin: auto;
   overflow: hidden;
+  min-height: 400px;
   height: auto;
 }
 
 .slides {
   display: flex;
   transition: transform 0.5s ease-in-out;
+  height: 100%;
 }
 
 .slide {
   min-width: 100%;
-  height: auto;
-  max-height: 600px;
   width: 100%;
-  object-fit: contain;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  max-height: 800px;
 }
 
 /* 화살표 스타일 */
@@ -39,9 +42,9 @@
 <div class="slider-container-dyangyi">
   <div class="slides">
     <!-- 아래 URL을 노션에서 복사한 이미지 주소로 교체 -->
-    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfODMg/MDAxNzM5MTUxMzY0NjM1.OVFUQYyrCIjxF5K5zLXXMshBj9YMOuCSHczHnEiK9Z4g.ofWW9MevbZ-8_hOIcFcwZOTyS-gla3WM11J5VV63nV4g.JPEG/_%E8%8F%B2%E8%8F%B21.jpg">
-    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjk2/MDAxNzM5MTUxMzY0NDcx.qjdd3G52UoIf3-8zH_ktDY1UHETyXB0zCD1kZZRsFBcg.odHmMWldanPn8QjxmJq_tcZ3el5GpZWo9E76s3Ih14Ag.JPEG/_%E8%8F%B2%E8%8F%B22.jpg">
-    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjUx/MDAxNzM5MTUxMzY0NTY4.JG0bB1tbR_VoqOobZlhMJ8sVFsyxsH8ZQkRez1yFzGkg.MvF5JHkOKZbbzFfipLKoeAL2lgzm7JUPyeo-uuU7Cjgg.JPEG/_%E8%8F%B2%E8%8F%B23.jpg">
+    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfODMg/MDAxNzM5MTUxMzY0NjM1.OVFUQYyrCIjxF5K5zLXXMshBj9YMOuCSHczHnEiK9Z4g.ofWW9MevbZ-8_hOIcFcwZOTyS-gla3WM11J5VV63nV4g.JPEG/_%E8%8F%B2%E8%8F%B21.jpg" alt="이미지 1">
+    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjk2/MDAxNzM5MTUxMzY0NDcx.qjdd3G52UoIf3-8zH_ktDY1UHETyXB0zCD1kZZRsFBcg.odHmMWldanPn8QjxmJq_tcZ3el5GpZWo9E76s3Ih14Ag.JPEG/_%E8%8F%B2%E8%8F%B22.jpg" alt="이미지 2">
+    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjUx/MDAxNzM5MTUxMzY0NTY4.JG0bB1tbR_VoqOobZlhMJ8sVFsyxsH8ZQkRez1yFzGkg.MvF5JHkOKZbbzFfipLKoeAL2lgzm7JUPyeo-uuU7Cjgg.JPEG/_%E8%8F%B2%E8%8F%B23.jpg" alt="이미지 3">
   </div>
   <div class="arrow prev">❮</div>
   <div class="arrow next">❯</div>
