@@ -6,21 +6,32 @@
   overflow: hidden;
   min-height: 400px;
   height: auto;
+  /* 컨테이너 배경 추가 */
+  background: #f5f5f5;
+  /* 컨테이너 정렬 추가 */
+  display: flex;
+  align-items: center;
 }
 
 .slides {
   display: flex;
   transition: transform 0.5s ease-in-out;
   height: 100%;
+  width: 100%; /* 너비 추가 */
+  /* 슬라이드 중앙 정렬을 위한 속성 추가 */
+  align-items: center;
 }
 
 .slide {
   min-width: 100%;
   width: 100%;
   height: auto;
-  object-fit: cover;
+  object-fit: contain; /* cover에서 contain으로 변경 */
   display: block;
   max-height: 800px;
+  /* 이미지 가로 맞춤을 위한 속성 추가 */
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 /* 화살표 스타일 */
@@ -37,27 +48,65 @@
 
 .prev { left: 10px; }
 .next { right: 10px; }
+
+/* 인디케이터 스타일 */
+.slider-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(0,0,0,0.3);
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+.indicator.active {
+  background: white;
+  border-color: rgba(0,0,0,0.5);
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+}
 </style>
 
 <div class="slider-container-aza">
   <div class="slides">
-    <!-- 아래 URL을 노션에서 복사한 이미지 주소로 교체 -->
-    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjI2/MDAxNzM5MTUxMzUzNDgy.o4MViQewTiJUwFtek2OoqB_KrocNqkrlWqXPFRO6GBog.5I6uGM0xl8kAm2DbSoSny09ZCvKvzerlHlacSukydq4g.JPEG/_%E8%B5%9B%E7%90%B3%E5%A8%9C_1.jpg" alt="이미지 1">
-    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMTAy/MDAxNzM5MTUxMzUzNDU1.J8JoFx2djtpdIRPpk7ZCkgIbUexC5N4-ovkUQpFUe7Ug.Saj8QFcqowygA2thQkr5zYifXXxtfd7BjZRd5l0pltsg.JPEG/_%E8%B5%9B%E7%90%B3%E5%A8%9C_2.jpg" alt="이미지 2">
-    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfNjMg/MDAxNzM5MTUxMzUzNTcz.E_tyafL9R7Gn7LVMKYXo2fdBLy1lAPPAMn0tExtIpEgg.TyTxLmFPszRzL-9f1rzAfDwiSLzmxH0lmnkFfwC2bi0g.JPEG/_%E8%B5%9B%E7%90%B3%E5%A8%9C_3.jpg" alt="이미지 3">
+    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjI2/MDAxNzM5MTUxMzUzNDgy.o4MViQewTiJUwFtek2OoqB_KrocNqkrlWqXPFRO6GBog.5I6uGM0xl8kAm2DbSoSny09ZCvKvzerlHlacSukydq4g.JPEG/_%E8%B5%9B%E7%90%B3%E5%A8%9C_1.jpg" alt="이미지 1">
+    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMTAy/MDAxNzM5MTUxMzUzNDU1.J8JoFx2djtpdIRPpk7ZCkgIbUexC5N4-ovkUQpFUe7Ug.Saj8QFcqowygA2thQkr5zYifXXxtfd7BjZRd5l0pltsg.JPEG/_%E8%B5%9B%E7%90%B3%E5%A8%9C_2.jpg" alt="이미지 2">
+    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfNjMg/MDAxNzM5MTUxMzUzNTcz.E_tyafL9R7Gn7LVMKYXo2fdBLy1lAPPAMn0tExtIpEgg.TyTxLmFPszRzL-9f1rzAfDwiSLzmxH0lmnkFfwC2bi0g.JPEG/_%E8%B5%9B%E7%90%B3%E5%A8%9C_3.jpg" alt="이미지 3">
   </div>
   <div class="arrow prev">❮</div>
   <div class="arrow next">❯</div>
+  <div class="slider-indicators">
+    <div class="indicator active"></div>
+    <div class="indicator"></div>
+    <div class="indicator"></div>
+  </div>
 </div>
 
 <script>
 let currentIndex = 0;
 const slides = document.querySelector('.slides');
 const totalSlides = document.querySelectorAll('.slide').length;
-let autoSlideInterval; // 자동 슬라이드 인터벌 변수 추가
+const indicators = document.querySelectorAll('.indicator');
+let autoSlideInterval;
+
+function updateIndicators() {
+  indicators.forEach((indicator, index) => {
+    indicator.classList.toggle('active', index === currentIndex);
+  });
+}
 
 function startAutoSlide() {
-  // 기존 인터벌 제거 후 새로운 인터벌 설정
   clearInterval(autoSlideInterval);
   autoSlideInterval = setInterval(() => {
     currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
@@ -68,19 +117,29 @@ function startAutoSlide() {
 document.querySelector('.prev').addEventListener('click', () => {
   currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
   updateSlide();
-  startAutoSlide(); // 수동 조작 시 자동 슬라이드 타이머 재시작
+  startAutoSlide();
 });
 
 document.querySelector('.next').addEventListener('click', () => {
   currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
   updateSlide();
-  startAutoSlide(); // 수동 조작 시 자동 슬라이드 타이머 재시작
+  startAutoSlide();
+});
+
+// 인디케이터 클릭 이벤트
+indicators.forEach((indicator, index) => {
+  indicator.addEventListener('click', () => {
+    currentIndex = index;
+    updateSlide();
+    startAutoSlide();
+  });
 });
 
 function updateSlide() {
   slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+  updateIndicators();
 }
 
-// 초기 자동 슬라이드 시작
+// 자동 슬라이드 시작
 startAutoSlide();
 </script>

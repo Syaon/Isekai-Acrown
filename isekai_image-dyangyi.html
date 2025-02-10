@@ -6,21 +6,28 @@
   overflow: hidden;
   min-height: 400px;
   height: auto;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
 }
 
 .slides {
   display: flex;
   transition: transform 0.5s ease-in-out;
   height: 100%;
+  width: 100%;
+  align-items: center;
 }
 
 .slide {
   min-width: 100%;
   width: 100%;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   max-height: 800px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 /* 화살표 스타일 */
@@ -37,27 +44,65 @@
 
 .prev { left: 10px; }
 .next { right: 10px; }
+
+/* 인디케이터 스타일 */
+.slider-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(0,0,0,0.3);
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+.indicator.active {
+  background: white;
+  border-color: rgba(0,0,0,0.5);
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+}
 </style>
 
 <div class="slider-container-dyangyi">
   <div class="slides">
-    <!-- 아래 URL을 노션에서 복사한 이미지 주소로 교체 -->
-    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfODMg/MDAxNzM5MTUxMzY0NjM1.OVFUQYyrCIjxF5K5zLXXMshBj9YMOuCSHczHnEiK9Z4g.ofWW9MevbZ-8_hOIcFcwZOTyS-gla3WM11J5VV63nV4g.JPEG/_%E8%8F%B2%E8%8F%B21.jpg" alt="이미지 1">
-    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjk2/MDAxNzM5MTUxMzY0NDcx.qjdd3G52UoIf3-8zH_ktDY1UHETyXB0zCD1kZZRsFBcg.odHmMWldanPn8QjxmJq_tcZ3el5GpZWo9E76s3Ih14Ag.JPEG/_%E8%8F%B2%E8%8F%B22.jpg" alt="이미지 2">
-    <img class="slide" loading="lazy" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjUx/MDAxNzM5MTUxMzY0NTY4.JG0bB1tbR_VoqOobZlhMJ8sVFsyxsH8ZQkRez1yFzGkg.MvF5JHkOKZbbzFfipLKoeAL2lgzm7JUPyeo-uuU7Cjgg.JPEG/_%E8%8F%B2%E8%8F%B23.jpg" alt="이미지 3">
+    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMjMy/MDAxNzM5MTU3NTEwMjYz.4I4iP1sbPRz_tbG2s7svBO0vkeJH1ytuC_vwPytD52Mg.Jzw9pK9mtYUEUEZPuH1KsPZkgzs6yAheJpqLn0K6CXwg.JPEG/_%E8%8F%B2%E8%8F%B21.jpg" alt="이미지 1">
+    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMTQ4/MDAxNzM5MTU3NTEwMTY3.R5Nknx2XNmNTLwreHq60E7cnTaQmYvK2TcRFH69lW6Yg._m4pzivLO3L2qTYo_SyTbM88iwcrTfNXoTFhBwgM_Swg.JPEG/_%E8%8F%B2%E8%8F%B22.jpg" alt="이미지 2">
+    <img class="slide" src="https://cafeptthumb-phinf.pstatic.net/MjAyNTAyMTBfMTUx/MDAxNzM5MTU3NTEwMjI5._Fdhc5HaHiWOJOgOIK-VX_mnXUklIp3IE017W3HQnbMg.afxgNBN4f-e57iUa5waBNvdEMDUltVaCSAY0jBPIAt0g.JPEG/_%E8%8F%B2%E8%8F%B23.jpg" alt="이미지 3">
   </div>
   <div class="arrow prev">❮</div>
   <div class="arrow next">❯</div>
+  <div class="slider-indicators">
+    <div class="indicator active"></div>
+    <div class="indicator"></div>
+    <div class="indicator"></div>
+  </div>
 </div>
 
 <script>
 let currentIndex = 0;
 const slides = document.querySelector('.slides');
 const totalSlides = document.querySelectorAll('.slide').length;
-let autoSlideInterval; // 자동 슬라이드 인터벌 변수 추가
+const indicators = document.querySelectorAll('.indicator');
+let autoSlideInterval;
+
+function updateIndicators() {
+  indicators.forEach((indicator, index) => {
+    indicator.classList.toggle('active', index === currentIndex);
+  });
+}
 
 function startAutoSlide() {
-  // 기존 인터벌 제거 후 새로운 인터벌 설정
   clearInterval(autoSlideInterval);
   autoSlideInterval = setInterval(() => {
     currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
@@ -68,19 +113,29 @@ function startAutoSlide() {
 document.querySelector('.prev').addEventListener('click', () => {
   currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
   updateSlide();
-  startAutoSlide(); // 수동 조작 시 자동 슬라이드 타이머 재시작
+  startAutoSlide();
 });
 
 document.querySelector('.next').addEventListener('click', () => {
   currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
   updateSlide();
-  startAutoSlide(); // 수동 조작 시 자동 슬라이드 타이머 재시작
+  startAutoSlide();
+});
+
+// 인디케이터 클릭 이벤트
+indicators.forEach((indicator, index) => {
+  indicator.addEventListener('click', () => {
+    currentIndex = index;
+    updateSlide();
+    startAutoSlide();
+  });
 });
 
 function updateSlide() {
   slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+  updateIndicators();
 }
 
-// 초기 자동 슬라이드 시작
+// 자동 슬라이드 시작
 startAutoSlide();
 </script>
